@@ -29,7 +29,6 @@ class Node:
 class Script(Node):
     """Represents a script in a shell language.
 
-
     Attributes
     ----------
     body : list of statements
@@ -48,6 +47,111 @@ class Comment(Node):
     """
     attrs = frozenset(["value"])
 
+
+class String(Node):
+    """An interpolated string made up of sub-string parts
+
+    Attributes
+    ----------
+    parts : list of nodes
+        Expressions that resolve the substring.
+    """
+    attrs = frozenset(["parts"])
+
+
+class RawString(Node):
+    """An interpolated string made up of sub-string parts
+
+    Attributes
+    ----------
+    value : str
+        A literal string value
+    """
+    attrs = frozenset(["value"])
+
+
+class EnvVar(Node):
+    """An environment variable
+
+    Attributes
+    ----------
+    name : str
+        The name of an environment variable to look up
+    """
+    attrs = frozenset(["name"])
+
+
+class StdIn(Node):
+    """A node representing the standard input stream."""
+
+
+class StdOut(Node):
+    """A node representing the standard output stream."""
+
+
+class StdErr(Node):
+    """A node representing the standard error stream."""
+
+
+class Command(Node):
+    """An environment variable
+
+    Attributes
+    ----------
+    args : list of nodes
+        The arguments to of the command.
+    stdin : node
+        A node representing where the stdin stream is read from.
+    stdout : node
+        A node representing where the stdout stream is written to.
+    stderr : node
+        A node representing where the stderr stream is written to.
+    background : bool
+        A flag for whether the command should be run in the background
+    """
+    attrs = frozenset([
+        "args",
+        "stdin",
+        "stdout",
+        "stderr",
+        "background",
+    ])
+    stdin = StdIn()
+    stdout = StdOut()
+    stderr = StdErr()
+    background = False
+
+
+class BinOp(Node):
+    """Generic binary operator between two nodes"""
+    attrs = frozenset(["lhs", "rhs"])
+
+
+class And(BinOp):
+    """Logical 'and' operation (&&).
+
+    Attributes
+    ----------
+    lhs : node
+        The left-hand side of the operation.
+    rhs : node
+        The right-hand side of the operation.
+    """
+
+class Or(BinOp):
+    """Logical 'or' operation (||).
+
+    Attributes
+    ----------
+    lhs : node
+        The left-hand side of the operation.
+    rhs : node
+        The right-hand side of the operation.
+    """
+
+class Not(Node):
+    """Negation operator for a node"""
+    attrs = frozenset(["node"])
 
 #
 # Statements
@@ -102,3 +206,13 @@ class Delete(Statement):
     """
     attrs = frozenset(["name"])
 
+
+class EnvDelete(Statement):
+    """Removal statement for normal variable
+
+    Attributes
+    ----------
+    name : str
+        The name of the variable
+    """
+    attrs = frozenset(["name"])
