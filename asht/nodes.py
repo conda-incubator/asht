@@ -70,13 +70,24 @@ class RawString(Node):
     attrs = frozenset(["value"])
 
 
+class Var(Node):
+    """A variable
+
+    Attributes
+    ----------
+    name : str
+        The name of a variable to look up.
+    """
+    attrs = frozenset(["name"])
+
+
 class EnvVar(Node):
     """An environment variable
 
     Attributes
     ----------
     name : str
-        The name of an environment variable to look up
+        The name of an environment variable to look up.
     """
     attrs = frozenset(["name"])
 
@@ -149,8 +160,15 @@ class Or(BinOp):
         The right-hand side of the operation.
     """
 
+
 class Not(Node):
-    """Negation operator for a node"""
+    """Negation operator for a node
+
+    Attributes
+    ----------
+    node : node
+        The node to negate
+    """
     attrs = frozenset(["node"])
 
 #
