@@ -1,7 +1,7 @@
-"""Node visitors"""
+"""Node and dictionary visitors"""
 
-class Visitor:
-    """Base visitor class"""
+class NodeVisitor:
+    """Base node visitor class"""
 
     def __init__(self, root=None):
         """
@@ -9,7 +9,7 @@ class Visitor:
         ----------
         node : Node or None
         """
-        self.root = node
+        self.root = root
 
     def visit(self, node=None):
         """Visit the tree or node"""
@@ -28,8 +28,8 @@ class Visitor:
         )
 
 
-class ToDict(Visitor):
-    """Dict visitor"""
+class ToDict(NodeVisitor):
+    """Creates a dictionary representation of nodes."""
 
     def visit_Script(self, node):
         return {"Script": {"body": list(map(self.visit, node.body))}}
@@ -100,3 +100,32 @@ class ToDict(Visitor):
 
     def visit_EnvDelete(self, node):
         return {"EnvDelete": {"name": node.name}}
+
+
+class DictVisitor:
+    """Base dict visitor class"""
+
+    def __init__(self, root=None):
+        """
+        Parameters
+        ----------
+        root : dict or None
+        """
+        self.root = root
+
+    def visit(self, dct=None):
+        """Visit the tree or dict"""
+        dct = self.root if node is None else dct
+        meth_name = "visit_" + next(iter(dct))
+        meth = getattr(self, meth_name, self.visit_default)
+        rtn = meth(dct)
+        return rtn
+
+    def visit_default(self, dct):
+        raise NotImplementedError(
+            self.__class__.__name__ +
+            " does not implement visit_default() or visit_" +
+            next(iter(dct)) +
+            "()."
+        )
+

@@ -25,6 +25,17 @@ class Node:
                 f"{self.__class__.__name__}: {extra}"
             )
 
+    def __eq__(self, other):
+        if type(self) is not type(other):
+            return False
+        for attr in self.attrs:
+            if getattr(self, attr) != getattr(other, attr):
+                return False
+        return True
+
+    def __ne__(self, other):
+        return not (self == other)
+
 
 class Script(Node):
     """Represents a script in a shell language.
