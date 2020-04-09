@@ -15,9 +15,17 @@ class Visitor:
         """Visit the tree or node"""
         node = self.root if node is None else node
         meth_name = "visit_" + node.__class__.__name__
-        meth = getattr(self, meth_name)
+        meth = getattr(self, meth_name, self.visit_default)
         rtn = meth(node)
         return rtn
+
+    def visit_default(self, node):
+        raise NotImplementedError(
+            self.__class__.__name__ +
+            " does not implement visit_default() or visit_" +
+            self.__class__.__name__ +
+            "()."
+        )
 
 
 class ToDict(Visitor):
@@ -70,3 +78,25 @@ class ToDict(Visitor):
 
     def visit_Not(self, node):
         return {"Not": {"node": self.visit(node)}}
+
+    def visit_Statement(self, node):
+        return {"Statement": {"node": self.visit(node)}}
+
+    def visit_Assign(self, node):
+        return {"Assign": {
+            "name": node.name,
+            "value": self.visit(node.value),
+            "scope": node.scope,
+        }}
+
+    def visit_EnvAssign(self, node):
+        return {"EnvAssign": {
+            "name": node.name,
+            "value": self.visit(node.value),
+        }}
+
+    def visit_Delete(self, node):
+        return {"Delete": {"name": node.name}}
+
+    def visit_EnvDelete(self, node):
+        return {"EnvDelete": {"name": node.name}}
