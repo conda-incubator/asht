@@ -197,3 +197,60 @@ class DictToNode(DictVistor):
             args=list(map(self.visit, attrs["args"])),
             **kwargs
         )
+
+    def visit_BinOp(self, dct):
+        name, attrs = next(iter(dct.items()))
+        cls = getattr(nodes, name, nodes.BinOp)
+        return cls(
+            lhs=self.visit(attrs["lhs"]),
+            rhs=self.visit(attrs["rhs"]),
+        )
+
+    visit_And = visit_BinOp
+    visit_Or = visit_BinOp
+
+    def visit_Not(self, dct):
+        return nodes.Not(node=self.visit(dct["Not"]["node"]))
+
+    def visit_Statement(self, dct):
+        return nodes.Statement(node=self.visit(dct["Statement"]["node"]))
+
+    def visit_Assign(self, dct):
+        attrs = dct["Assign"]
+        return nodes.Assign(
+            name=attrs["name"],
+            value=self.visit(attrs["value"]),
+            scope=attrs["scope"],
+        )
+
+    def visit_EnvAssign(self, dct):
+        attrs = dct["EnvAssign"]
+        return nodes.EnvAssign(
+            name=attrs["name"],
+            value=self.visit(attrs["value"]),
+        )
+
+    def visit_Delete(self, dct):
+        return nodes.Delete(name=self.visit(dct["Delete"]["name"]))
+
+    def visit_EnvDelete(self, dct):
+        return nodes.EnvDelete(name=self.visit(dct["EnvDelete"]["name"]))
+
+    def visit_Pass(self, dct):
+        return nodes.Pass()
+
+    def visit_If(self, dct):
+        attrs = dct["If"]
+        return nodes.If(
+            test=self.visit(attrs["test"]),
+            body=list(map(self.visit, attrs["body"])),
+            orelse=list(map(self.visit, attrs["orelse"])),
+        )
+
+    def visit_For(self, dct):
+        attrs = dct["For"]
+        return nodes.For(
+            target=self.visit(attrs["target"]),
+            iter=self.visit(attrs["iter"]),
+            body=list(map(self.visit, attrs["body"])),
+        )
