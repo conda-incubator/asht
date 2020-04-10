@@ -1,4 +1,5 @@
 """Node and dictionary visitors"""
+from . import nodes
 
 class NodeVisitor:
     """Base node visitor class"""
@@ -118,6 +119,7 @@ class NodeToDict(NodeVisitor):
             "body": list(map(self.visit, node.body)),
         }}
 
+
 class DictVisitor:
     """Base dict visitor class"""
 
@@ -148,3 +150,50 @@ class DictVisitor:
 
 class DictToNode(DictVistor):
     """Creates a node tree representation from a dict"""
+
+    def visit_Script(self, dct):
+        return nodes.Script(
+            body=list(map(self.visit, dct["Script"]["body"])),
+        )
+
+    def visit_Comment(self, dct):
+        return nodes.Comment(value=dct["Comment"]["value"])
+
+    def visit_String(self, dct):
+        return nodes.String(
+            parts=list(map(self.visit, dct["String"]["parts"])),
+        )
+
+    def visit_RawString(self, dct):
+        return nodes.RawString(value=dct["RawString"]["value"])
+
+    def visit_Var(self, dct):
+        return nodes.Var(name=dct["Var"]["name"])
+
+    def visit_EnvVar(self, dct):
+        return nodes.EnvVar(name=dct["EnvVar"]["name"])
+
+    def visit_StdIn(self, dct):
+        return nodes.StdIn()
+
+    def visit_StdOut(self, dct):
+        return nodes.StdOut()
+
+    def visit_StdErr(self, dct):
+        return nodes.StdErr()
+
+    def visit_Command(self, dct):
+        attrs = dct["Command"]
+        kwargs = {}
+        if "stdin" in attrs:
+            kwargs["stdin"] = self.visit(attrs["stdin"])
+        if "stdout" in attrs:
+            kwargs["stdout"] = self.visit(attrs["stdout"])
+        if "stderr" in attrs:
+            kwargs["stderr"] = self.visit(attrs["stdout"])
+        if "background" in attrs:
+            kwargs["background"] = self.visit(attrs["background"])
+        return nodes.Command(
+            args=list(map(self.visit, attrs["args"])),
+            **kwargs
+        )
