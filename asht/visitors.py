@@ -28,7 +28,7 @@ class NodeVisitor:
         )
 
 
-class ToDict(NodeVisitor):
+class NodeToDict(NodeVisitor):
     """Creates a dictionary representation of nodes."""
 
     def visit_Script(self, node):
@@ -101,6 +101,22 @@ class ToDict(NodeVisitor):
     def visit_EnvDelete(self, node):
         return {"EnvDelete": {"name": node.name}}
 
+    def visit_Pass(self, node):
+        return {"Pass": {}}
+
+    def visit_If(self, node):
+        return {"If": {
+            "test": self.visit(node.test),
+            "body": list(map(self.visit, node.body)),
+            "orelse": list(map(self.visit, node.orelse)),
+        }}
+
+    def visit_For(self, node):
+        return {"For": {
+            "target": self.visit(node.target),
+            "iter": self.visit(node.iter),
+            "body": list(map(self.visit, node.body)),
+        }}
 
 class DictVisitor:
     """Base dict visitor class"""
@@ -129,3 +145,6 @@ class DictVisitor:
             "()."
         )
 
+
+class DictToNode(DictVistor):
+    """Creates a node tree representation from a dict"""

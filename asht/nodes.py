@@ -245,3 +245,37 @@ class EnvDelete(Statement):
         The name of the variable
     """
     attrs = frozenset(["name"])
+
+
+class Pass(Statement):
+    """Non-executing statement that is a syntatic placeholder."""
+
+
+class If(Statement):
+    """If-else if-else statement
+
+    Attributes
+    ----------
+    test : Node
+        A condition that evaluates to true or false when executed.
+    body : iterable of Nodes
+        The block that executes when the test resolves as true.
+    orelse : iterable of Nodes
+        The block that executes when the test resolves as false.
+    """
+    attrs = frozenset(["test", "body", "orelse"])
+
+
+class For(Statement):
+    """A basic loop structure
+
+    Attributes
+    ----------
+    target : Node
+        The loop variable to assign when iterating.
+    iter : Node
+        The expression to iterate over.
+    body : iterable of Nodes
+        The block that executes when looping
+    """
+    attrs = frozenset(["target", "iter", "body"])
