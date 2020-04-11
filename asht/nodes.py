@@ -21,8 +21,8 @@ class Node:
         if (set(kwargs.items()) - self.attrs) - LINE_COL:
             extra = (set(kwargs.items()) - self.attrs) - LINE_COL
             raise RuntimeError(
-                f"unknown attributes of node "
-                f"{self.__class__.__name__}: {extra}"
+                "unknown attributes of node " +
+                self.__class__.__name__ + ": " + repr(extra)
             )
 
     def __eq__(self, other):
