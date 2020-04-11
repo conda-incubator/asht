@@ -76,7 +76,7 @@ class String(Node):
 
 
 class RawString(Node):
-    """An interpolated string made up of sub-string parts
+    """A literal string
 
     Attributes
     ----------

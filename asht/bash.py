@@ -1,0 +1,76 @@
+"""Bash tools."""
+from .visitors import DictVistor, STDIN_DICT, STDOUT_DICT, STDERR_DICT
+
+
+class ToBashFromDict(DictVistor):
+    """Converts dict tree to Bash code."""
+
+    def visit_Script(self, dct):
+        return "".join(map(self.visit, dct["Script"]["body"]))
+
+    def visit_Comment(self, dct):
+        return "# " + dct["Comment"]["value"] + "\n"
+
+    def visit_String(self, dct):
+        s = '"' + "".join(map(self.visit, dct["String"]["parts"])) + '"'
+        return s
+
+    def visit_RawString(self, dct):
+        return dct["RawString"]["value"]
+
+    def visit_Var(self, dct):
+        return "$" + dct["Var"]["name"]
+
+    def visit_EnvVar(self, dct):
+        return "$" + dct["EnvVar"]["name"]
+
+    def visit_Command(self, dct):
+        attrs = dct["Command"]
+        s = " ".join(map(self.visit, attrs["args"]))
+        if "stderr" in attrs and attrs["stderr"] != STDERR_DICT:
+            s += " 2> " + attrs["stderr"]
+        if "stdout" in attrs and attrs["stdout"] != STDOUT_DICT:
+            s += " > " + attrs["stdout"]
+        if "stdin" in attrs and attrs["stdin"] != STDIN_DICT:
+            s += " < " + attrs["stdin"]
+        if "background" in attrs and attrs["background"]:
+            s += "  &"
+        return s
+
+    def visit_And(self, dct):
+        s = self.visit(dct["And"]["lhs"]) + " && " + self.visit(dct["And"]["rhs"])
+        return s
+
+    def visit_Or(self, dct):
+        s = self.visit(dct["Or"]["lhs"]) + " || " + self.visit(dct["Or"]["rhs"])
+        return s
+
+    def visit_Not(self, dct):
+        return "! " + self.visit(dct["Not"]["node"])
+
+    def visit_Statement(self, dct):
+        return self.visit(dct["Not"]["node"]) + "\n"
+
+    def visit_Assign(self, dct):
+        attrs = dct["Assign"]
+        return attrs["name"] + "=" + self.visit(attrs["value"]) + "\n"
+
+    def visit_EnvAssign(self, dct):
+        attrs = dct["EnvAssign"]
+        s = "export " + attrs["name"] + "=" + self.visit(attrs["value"]) + "\n"
+        return s
+
+    def visit_Delete(self, dct):
+        return "unset " + dct["Delete"]["name"] + "\n"
+
+    def visit_EnvDelete(self, dct):
+        return "unset " + dct["EnvDelete"]["name"] + "\n"
+
+    def visit_Pass(self, dct):
+        return ":\n"
+
+    def visit_If(self, dct):
+        attrs = dct["If"]
+        s = "if " + self.visit(attrs["then"]) + "; then\n"
+        #s +=
+        return
