@@ -1,6 +1,7 @@
 """Node and dictionary visitors"""
 from . import nodes
 
+
 class NodeVisitor:
     """Base node visitor class"""
 

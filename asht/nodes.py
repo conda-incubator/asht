@@ -36,6 +36,11 @@ class Node:
     def __ne__(self, other):
         return not (self == other)
 
+    def __str__(self):
+        from .pretty import pformat_node
+
+        return pformat_node(self)
+
 
 class Script(Node):
     """Represents a script in a shell language.
