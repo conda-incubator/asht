@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 
@@ -10,7 +11,7 @@ def main():
         readme = f.read()
     skw = dict(
         name='asht',
-        description='Abstract Shell Tree'
+        description='Abstract Shell Tree',
         long_description=readme,
         long_description_content_type='text/markdown',
         license='BSD',
@@ -23,7 +24,7 @@ def main():
         classifiers=['Programming Language :: Python :: 3'],
         packages=['asht'],
         package_dir={'asht': 'asht'},
-        package_data={'asht': ['*.xsh']},
+        package_data={'asht': []},
         install_requires=[],
         python_requires=">=2.7",
         zip_safe=False,
