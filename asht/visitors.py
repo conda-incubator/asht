@@ -2,6 +2,10 @@
 from . import nodes
 
 
+STDIN_DICT = {"StdIn": {}}
+STDOUT_DICT = {"StdOut": {}}
+STDERR_DICT = {"StdErr": {}}
+
 class NodeVisitor:
     """Base node visitor class"""
 
@@ -149,7 +153,7 @@ class DictVisitor:
         )
 
 
-class DictToNode(DictVistor):
+class DictToNode(DictVisitor):
     """Creates a node tree representation from a dict"""
 
     def visit_Script(self, dct):

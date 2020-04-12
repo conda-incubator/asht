@@ -1,8 +1,9 @@
 """Bash tools."""
-from .visitors import DictVistor, STDIN_DICT, STDOUT_DICT, STDERR_DICT
+from .nodes import Node
+from .visitors import DictVisitor, STDIN_DICT, STDOUT_DICT, STDERR_DICT, NodeToDict
 
 
-class ToBashFromDict(DictVistor):
+class ToBashFromDict(DictVisitor):
     """Converts dict tree to Bash code."""
 
     def visit_Script(self, dct):
@@ -84,7 +85,7 @@ class ToBashFromDict(DictVistor):
             s += "fi\n"
         return s
 
-    class visit_For(self, dct):
+    def visit_For(self, dct):
         attrs = dct["If"]
         target = attrs["target"]
         target_type, target_name = next(iter(target.items()))
@@ -100,3 +101,12 @@ class ToBashFromDict(DictVistor):
         s += "  " + "\n  ".join(map(self.visit, attrs["body"])) + "\n"
         s += "done\n"
         return s
+
+
+def tobash(tree):
+    """Converts a tree to Bash."""
+    if isinstance(tree, Node):
+        todict = NodeToDict()
+        tree = todict.visit(tree)
+    visitor = ToBashFromDict()
+    return visitor.visit(tree)

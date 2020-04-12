@@ -13,10 +13,10 @@ class Node:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             if key in self.attrs:
-                setattr(self, key, value):
-        if lineno in kwargs:
+                setattr(self, key, value)
+        if "lineno" in kwargs:
             self.lineno = kwargs["lineno"]
-        if column in kwargs:
+        if "column" in kwargs:
             self.column = kwargs["column"]
         if (set(kwargs.items()) - self.attrs) - LINE_COL:
             extra = (set(kwargs.items()) - self.attrs) - LINE_COL
