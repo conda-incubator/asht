@@ -72,5 +72,31 @@ class ToBashFromDict(DictVistor):
     def visit_If(self, dct):
         attrs = dct["If"]
         s = "if " + self.visit(attrs["then"]) + "; then\n"
-        #s +=
-        return
+        s += "  " + "\n  ".join(map(self.visit, attrs["body"])) + "\n"
+        orelse = attrs.get("orelse", None)
+        if not orelse:
+            s += "fi\n"
+        elif len(orelse) == 1 and next(iter(orelse.keys())) == "If":
+            s += "el" + self.visit_If(orelse[0])
+        else:
+            s += "else:\n"
+            s += "  " + "\n  ".join(map(self.visit, orelse)) + "\n"
+            s += "fi\n"
+        return s
+
+    class visit_For(self, dct):
+        attrs = dct["If"]
+        target = attrs["target"]
+        target_type, target_name = next(iter(target.items()))
+        if target_type == "Var":
+            target_assign = target_name
+        elif target_type == "EnvVar":
+            target_assign = "$" + target_name
+        else:
+            raise ValueError("For loop must assign to a variable name (Var)"
+                             "or environment variable name (EnvVar).")
+        s = "for " + target_assign + " in "
+        s += self.visit(attrs["iter"]) + "; do\n"
+        s += "  " + "\n  ".join(map(self.visit, attrs["body"])) + "\n"
+        s += "done\n"
+        return s
