@@ -138,7 +138,7 @@ class DictVisitor:
 
     def visit(self, dct=None):
         """Visit the tree or dict"""
-        dct = self.root if node is None else dct
+        dct = self.root if dct is None else dct
         meth_name = "visit_" + next(iter(dct))
         meth = getattr(self, meth_name, self.visit_default)
         rtn = meth(dct)

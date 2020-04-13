@@ -50,7 +50,7 @@ class ToBashFromDict(DictVisitor):
         return "! " + self.visit(dct["Not"]["node"])
 
     def visit_Statement(self, dct):
-        return self.visit(dct["Not"]["node"]) + "\n"
+        return self.visit(dct["Statement"]["node"]) + "\n"
 
     def visit_Assign(self, dct):
         attrs = dct["Assign"]
@@ -72,33 +72,33 @@ class ToBashFromDict(DictVisitor):
 
     def visit_If(self, dct):
         attrs = dct["If"]
-        s = "if " + self.visit(attrs["then"]) + "; then\n"
-        s += "  " + "\n  ".join(map(self.visit, attrs["body"])) + "\n"
+        s = "if " + self.visit(attrs["test"]) + "; then\n"
+        s += "  " + "  ".join(map(self.visit, attrs["body"]))
         orelse = attrs.get("orelse", None)
         if not orelse:
             s += "fi\n"
         elif len(orelse) == 1 and next(iter(orelse.keys())) == "If":
             s += "el" + self.visit_If(orelse[0])
         else:
-            s += "else:\n"
-            s += "  " + "\n  ".join(map(self.visit, orelse)) + "\n"
+            s += "else\n"
+            s += "  " + "  ".join(map(self.visit, orelse))
             s += "fi\n"
         return s
 
     def visit_For(self, dct):
-        attrs = dct["If"]
+        attrs = dct["For"]
         target = attrs["target"]
         target_type, target_name = next(iter(target.items()))
         if target_type == "Var":
-            target_assign = target_name
+            target_assign = target_name["name"]
         elif target_type == "EnvVar":
-            target_assign = "$" + target_name
+            target_assign = "$" + target_name["name"]
         else:
             raise ValueError("For loop must assign to a variable name (Var)"
                              "or environment variable name (EnvVar).")
         s = "for " + target_assign + " in "
         s += self.visit(attrs["iter"]) + "; do\n"
-        s += "  " + "\n  ".join(map(self.visit, attrs["body"])) + "\n"
+        s += "  " + "  ".join(map(self.visit, attrs["body"]))
         s += "done\n"
         return s
 
