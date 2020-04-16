@@ -83,6 +83,109 @@ MINIMAL_DICT_CASES = {
 DICT_CASES.update(MINIMAL_DICT_CASES)
 
 
+#
+# Compund cases
+#
+COMPOUND_DICT_CASES = [
+    {
+        "Script": {
+            "body": [
+                {"Comment": {"value": "I am a comment"}},
+                {
+                    "Assign": {
+                        "name": "x",
+                        "value": {
+                            "String": {"parts": [{"RawString": {"value": "cd"}}]}
+                        },
+                        "scope": "global",
+                    }
+                },
+                {
+                    "If": {
+                        "test": {"Var": {"name": "x"}},
+                        "body": [{"Delete": {"name": "x"}}],
+                        "orelse": [],
+                    }
+                },
+            ]
+        }
+    },
+    {
+        "String": {
+            "parts": [{"RawString": {"value": "cd "}}, {"EnvVar": {"name": "HOME"}}]
+        }
+    },
+    {
+        "If": {
+            "test": {"Var": {"name": "x"}},
+            "body": [
+                {"Delete": {"name": "x"}},
+                {
+                    "Assign": {
+                        "name": "x",
+                        "value": {
+                            "String": {"parts": [{"RawString": {"value": "cd"}}]}
+                        },
+                        "scope": "global",
+                    }
+                },
+            ],
+            "orelse": [
+                {
+                    "If": {
+                        "test": {"Var": {"name": "y"}},
+                        "body": [
+                            {"Delete": {"name": "y"}},
+                            {
+                                "Assign": {
+                                    "name": "y",
+                                    "value": {
+                                        "String": {
+                                            "parts": [{"RawString": {"value": "ls"}}]
+                                        }
+                                    },
+                                    "scope": "global",
+                                }
+                            },
+                        ],
+                        "orelse": [{"Pass": {}}],
+                    }
+                }
+            ],
+        }
+    },
+    {
+        "For": {
+            "target": {"Var": {"name": "x"}},
+            "iter": {
+                "String": {
+                    "parts": [
+                        {"RawString": {"value": "ls "}},
+                        {"EnvVar": {"name": "HOME"}},
+                    ]
+                }
+            },
+            "body": [
+                {"Comment": {"value": "I am a comment"}},
+                {
+                    "Assign": {
+                        "name": "y",
+                        "value": {
+                            "String": {"parts": [{"RawString": {"value": "cd"}}]}
+                        },
+                        "scope": "global",
+                    }
+                },
+            ],
+        }
+    },
+]
+COMPOUND_DICT_CASES = {
+    "compound-" + next(iter(c.keys())).lower(): c for c in COMPOUND_DICT_CASES
+}
+DICT_CASES.update(COMPOUND_DICT_CASES)
+
+
 def zip_cases(expecteds):
     """zips input and expetced values for cases"""
     rtn = []

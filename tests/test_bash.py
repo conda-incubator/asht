@@ -37,6 +37,31 @@ TOBASH_EXP = {
     "minimal-envdelete": "unset HOME\n",
     "minimal-if": "if $x; then\n  :\nelse\n  :\nfi\n",
     "minimal-for": 'for x in "cd"; do\n  :\ndone\n',
+    "compound-script": """
+# I am a comment
+x="cd"
+if $x; then
+  unset x
+fi
+""".lstrip(),
+    "compound-string": '"cd $HOME"',
+    "compound-if": """
+if $x; then
+  unset x
+  x="cd"
+elif $y; then
+  unset y
+  y="ls"
+else
+  :
+fi
+""".lstrip(),
+    "compound-for": """
+for x in "ls $HOME"; do
+  # I am a comment
+  y="cd"
+done
+""".lstrip(),
 }
 
 
