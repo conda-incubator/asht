@@ -77,7 +77,7 @@ class ToBashFromDict(DictVisitor):
         orelse = attrs.get("orelse", None)
         if not orelse:
             s += "fi\n"
-        elif len(orelse) == 1 and next(iter(orelse.keys())) == "If":
+        elif len(orelse) == 1 and next(iter(orelse[0].keys())) == "If":
             s += "el" + self.visit_If(orelse[0])
         else:
             s += "else\n"

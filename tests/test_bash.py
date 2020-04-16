@@ -22,6 +22,21 @@ TOBASH_EXP = {
     "empty-pass": ':\n',
     "empty-if": 'if $_; then\n  :\nfi\n',
     "empty-for": 'for _ in ""; do\n  :\ndone\n',
+    "minimal-script": ":\n",
+    "minimal-comment": "# I am a comment\n",
+    "minimal-string": '"cd"',
+    "minimal-rawstring": "ls",
+    "minimal-var": "$x",
+    "minimal-envvar": "$HOME",
+    "minimal-and": "$x && $y",
+    "minimal-or": "$x || $y",
+    "minimal-not": "! $x",
+    "minimal-assign": 'x="cd"\n',
+    "minimal-envassign": 'export HOME="/path/to/home"\n',
+    "minimal-delete": "unset x\n",
+    "minimal-envdelete": "unset HOME\n",
+    "minimal-if": "if $x; then\n  :\nelse\n  :\nfi\n",
+    "minimal-for": 'for x in "cd"; do\n  :\ndone\n',
 }
 
 
