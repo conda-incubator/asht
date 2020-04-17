@@ -26,17 +26,20 @@ class ToBashFromDict(DictVisitor):
         return "$" + dct["EnvVar"]["name"]
 
     def visit_Command(self, dct):
-        attrs = dct["Command"]
+        attrs = next(iter(dct.values()))
         s = " ".join(map(self.visit, attrs["args"]))
         if "stderr" in attrs and attrs["stderr"] != STDERR_DICT:
-            s += " 2> " + attrs["stderr"]
+            s += " 2> " + self.visit(attrs["stderr"])
         if "stdout" in attrs and attrs["stdout"] != STDOUT_DICT:
-            s += " > " + attrs["stdout"]
+            s += " > " + self.visit(attrs["stdout"])
         if "stdin" in attrs and attrs["stdin"] != STDIN_DICT:
-            s += " < " + attrs["stdin"]
+            s += " < " + self.visit(attrs["stdin"])
         if "background" in attrs and attrs["background"]:
             s += "  &"
         return s
+
+    def visit_CapturedCommand(self, dct):
+        return "$(" + self.visit_Command(dct) + ")"
 
     def visit_And(self, dct):
         s = self.visit(dct["And"]["lhs"]) + " && " + self.visit(dct["And"]["rhs"])

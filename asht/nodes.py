@@ -121,7 +121,7 @@ class StdErr(Node):
 
 
 class Command(Node):
-    """An environment variable
+    """An executed subprocess command.
 
     Attributes
     ----------
@@ -147,6 +147,24 @@ class Command(Node):
     stdout = StdOut()
     stderr = StdErr()
     background = False
+
+
+class CapturedCommand(Command):
+    """An executed subprocess command whose stdout is captured.
+
+    Attributes
+    ----------
+    args : list of nodes
+        The arguments to of the command.
+    stdin : node
+        A node representing where the stdin stream is read from.
+    stdout : node
+        A node representing where the stdout stream is written to.
+    stderr : node
+        A node representing where the stderr stream is written to.
+    background : bool
+        A flag for whether the command should be run in the background
+    """
 
 
 class BinOp(Node):
