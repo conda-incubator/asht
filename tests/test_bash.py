@@ -12,6 +12,7 @@ TOBASH_EXP = {
     "empty-rawstring": "",
     "empty-var": "$_",
     "empty-envvar": "$_",
+    "empty-command": "echo",
     "empty-and": "$_ && $_",
     "empty-or": "$_ || $_",
     "empty-not": "! $_",
@@ -28,6 +29,7 @@ TOBASH_EXP = {
     "minimal-rawstring": "ls",
     "minimal-var": "$x",
     "minimal-envvar": "$HOME",
+    "minimal-command": "echo Wow Mom",
     "minimal-and": "$x && $y",
     "minimal-or": "$x || $y",
     "minimal-not": "! $x",
@@ -45,6 +47,7 @@ if $x; then
 fi
 """.lstrip(),
     "compound-string": '"cd $HOME"',
+    "compound-command": 'echo "$HOME"',
     "compound-if": """
 if $x; then
   unset x

@@ -11,6 +11,7 @@ EMPTY_DICT_CASES = [
     {"RawString": {"value": ""}},
     {"Var": {"name": "_"}},
     {"EnvVar": {"name": "_"}},
+    {"Command": {"args": [{"RawString": {"value": "echo"}}]}},
     {"And": {"lhs": {"Var": {"name": "_"}}, "rhs": {"Var": {"name": "_"}}}},
     {"Or": {"lhs": {"Var": {"name": "_"}}, "rhs": {"Var": {"name": "_"}}}},
     {"Not": {"node": {"Var": {"name": "_"}}}},
@@ -44,6 +45,11 @@ MINIMAL_DICT_CASES = [
     {"RawString": {"value": "ls"}},
     {"Var": {"name": "x"}},
     {"EnvVar": {"name": "HOME"}},
+    {"Command": {"args": [
+        {"RawString": {"value": "echo"}},
+        {"RawString": {"value": "Wow"}},
+        {"RawString": {"value": "Mom"}},
+    ]}},
     {"And": {"lhs": {"Var": {"name": "x"}}, "rhs": {"Var": {"name": "y"}}}},
     {"Or": {"lhs": {"Var": {"name": "x"}}, "rhs": {"Var": {"name": "y"}}}},
     {"Not": {"node": {"Var": {"name": "x"}}}},
@@ -115,6 +121,10 @@ COMPOUND_DICT_CASES = [
             "parts": [{"RawString": {"value": "cd "}}, {"EnvVar": {"name": "HOME"}}]
         }
     },
+    {"Command": {"args": [
+        {"RawString": {"value": "echo"},},
+        {"String": {"parts": [{"EnvVar": {"name": "HOME"}}]}}
+    ]}},
     {
         "If": {
             "test": {"Var": {"name": "x"}},
