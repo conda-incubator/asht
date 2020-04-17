@@ -24,6 +24,7 @@ TOBASH_EXP = {
     "empty-pass": ':\n',
     "empty-if": 'if $_; then\n  :\nfi\n',
     "empty-for": 'for _ in ""; do\n  :\ndone\n',
+    "empty-function": "function f {\n  :\n}\n",
     "minimal-script": ":\n",
     "minimal-comment": "# I am a comment\n",
     "minimal-string": '"cd"',
@@ -41,6 +42,7 @@ TOBASH_EXP = {
     "minimal-envdelete": "unset HOME\n",
     "minimal-if": "if $x; then\n  :\nelse\n  :\nfi\n",
     "minimal-for": 'for x in "cd"; do\n  :\ndone\n',
+    "minimal-function": "function f {\n  $x\n}\n",
     "compound-script": """
 # I am a comment
 x="cd"
@@ -67,6 +69,12 @@ for x in "ls $HOME"; do
   # I am a comment
   y="cd"
 done
+""".lstrip(),
+    "compound-function": """
+function f {
+  # I am a comment
+  $x
+}
 """.lstrip(),
 }
 

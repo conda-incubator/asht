@@ -105,6 +105,12 @@ class ToBashFromDict(DictVisitor):
         s += "done\n"
         return s
 
+    def visit_Function(self, dct):
+        s = "function " + dct["Function"]["name"] + " {\n"
+        s += "  " + "  ".join(map(self.visit, dct["Function"]["body"]))
+        s += "}\n"
+        return s
+
 
 def tobash(tree):
     """Converts a tree to Bash."""

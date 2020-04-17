@@ -302,3 +302,9 @@ class For(Statement):
         The block that executes when looping
     """
     attrs = frozenset(["target", "iter", "body"])
+
+
+class Function(Statement):
+    """
+    """
+    attrs = frozenset(["name", "body"])

@@ -29,6 +29,7 @@ EMPTY_DICT_CASES = [
             "body": [{"Pass": {}}],
         }
     },
+    {"Function": {"name": "f", "body": [{"Pass": {}}]}},
 ]
 EMPTY_DICT_CASES = {
     "empty-" + next(iter(c.keys())).lower(): c for c in EMPTY_DICT_CASES
@@ -94,6 +95,12 @@ MINIMAL_DICT_CASES = [
             "target": {"Var": {"name": "x"}},
             "iter": {"String": {"parts": [{"RawString": {"value": "cd"}}]}},
             "body": [{"Pass": {}}],
+        }
+    },
+    {
+        "Function": {
+            "name": "f",
+            "body": [{"Statement": {"node": {"Var": {"name": "x"}}}}],
         }
     },
 ]
@@ -212,6 +219,15 @@ COMPOUND_DICT_CASES = [
                         "scope": "global",
                     }
                 },
+            ],
+        }
+    },
+    {
+        "Function": {
+            "name": "f",
+            "body": [
+                {"Comment": {"value": "I am a comment"}},
+                {"Statement": {"node": {"Var": {"name": "x"}}}},
             ],
         }
     },
