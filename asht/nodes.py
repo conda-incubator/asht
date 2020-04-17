@@ -235,6 +235,17 @@ class Assign(Statement):
     attrs = frozenset(["name", "value", "scope"])
 
 
+class Delete(Statement):
+    """Removal statement for normal variable
+
+    Attributes
+    ----------
+    name : str
+        The name of the variable
+    """
+    attrs = frozenset(["name"])
+
+
 class EnvAssign(Statement):
     """Assignment statement for environment variable
 
@@ -248,8 +259,8 @@ class EnvAssign(Statement):
     attrs = frozenset(["name", "value"])
 
 
-class Delete(Statement):
-    """Removal statement for normal variable
+class EnvDelete(Statement):
+    """Removal statement for environment variable
 
     Attributes
     ----------
@@ -259,13 +270,26 @@ class Delete(Statement):
     attrs = frozenset(["name"])
 
 
-class EnvDelete(Statement):
-    """Removal statement for normal variable
+class AliasAssign(Statement):
+    """Assignment statement for an alias
 
     Attributes
     ----------
     name : str
-        The name of the variable
+        The name of the alias
+    value : non-statement Node
+        The value of the alias to give to the name
+    """
+    attrs = frozenset(["name", "value"])
+
+
+class AliasDelete(Statement):
+    """Removal statement for alias
+
+    Attributes
+    ----------
+    name : str
+        The name of the alias
     """
     attrs = frozenset(["name"])
 
@@ -305,6 +329,24 @@ class For(Statement):
 
 
 class Function(Statement):
-    """
+    """A function, that may be called later.
+
+    Attributes
+    ----------
+    name : str
+        The name of the function
+    body : iterable of Nodes
+        The block that is executed when the function is called
+
+    Notes
+    -----
+    * Because of the restrictions in Bash and Batch commands,
+      return statements and parameter declarations are not
+      allowed in functions.
+    * We also do not have a cooresponding Call node.
+      Lanaguages which have a semantic distinction
+      between calling functions and executing commands
+      will need to keep track of which functions have been
+      defined.
     """
     attrs = frozenset(["name", "body"])

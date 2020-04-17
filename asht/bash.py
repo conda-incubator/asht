@@ -59,16 +59,24 @@ class ToBashFromDict(DictVisitor):
         attrs = dct["Assign"]
         return attrs["name"] + "=" + self.visit(attrs["value"]) + "\n"
 
+    def visit_Delete(self, dct):
+        return "unset " + dct["Delete"]["name"] + "\n"
+
     def visit_EnvAssign(self, dct):
         attrs = dct["EnvAssign"]
         s = "export " + attrs["name"] + "=" + self.visit(attrs["value"]) + "\n"
         return s
 
-    def visit_Delete(self, dct):
-        return "unset " + dct["Delete"]["name"] + "\n"
-
     def visit_EnvDelete(self, dct):
         return "unset " + dct["EnvDelete"]["name"] + "\n"
+
+    def visit_AliasAssign(self, dct):
+        attrs = dct["AliasAssign"]
+        s = "alias " + attrs["name"] + "=" + self.visit(attrs["value"]) + "\n"
+        return s
+
+    def visit_AliasDelete(self, dct):
+        return "unalias " + dct["AliasDelete"]["name"] + "\n"
 
     def visit_Pass(self, dct):
         return ":\n"

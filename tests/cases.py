@@ -17,9 +17,11 @@ EMPTY_DICT_CASES = [
     {"Or": {"lhs": {"Var": {"name": "_"}}, "rhs": {"Var": {"name": "_"}}}},
     {"Not": {"node": {"Var": {"name": "_"}}}},
     {"Assign": {"name": "_", "value": {"String": {"parts": []}}, "scope": "global"}},
-    {"EnvAssign": {"name": "_", "value": {"String": {"parts": []}}}},
     {"Delete": {"name": "_"}},
+    {"EnvAssign": {"name": "_", "value": {"String": {"parts": []}}}},
     {"EnvDelete": {"name": "_"}},
+    {"AliasAssign": {"name": "_", "value": {"String": {"parts": []}}}},
+    {"AliasDelete": {"name": "_"}},
     {"Pass": {}},
     {"If": {"test": {"Var": {"name": "_"}}, "body": [{"Pass": {}}], "orelse": []}},
     {
@@ -75,14 +77,28 @@ MINIMAL_DICT_CASES = [
             "scope": "global",
         }
     },
+    {"Delete": {"name": "x"}},
     {
         "EnvAssign": {
             "name": "HOME",
             "value": {"String": {"parts": [{"RawString": {"value": "/path/to/home"}}]}},
         }
     },
-    {"Delete": {"name": "x"}},
     {"EnvDelete": {"name": "HOME"}},
+    {
+        "AliasAssign": {
+            "name": "gg",
+            "value": {
+                "String": {
+                    "parts": [
+                        {"RawString": {"value": "cd "}},
+                        {"RawString": {"value": "/path/to/home"}},
+                    ]
+                }
+            },
+        }
+    },
+    {"AliasDelete": {"name": "gg"}},
     {
         "If": {
             "test": {"Var": {"name": "x"}},
